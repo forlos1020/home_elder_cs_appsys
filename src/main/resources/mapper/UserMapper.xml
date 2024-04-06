@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.user.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.user.pojo.User">
+            <id property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="userRealname" column="user_realName" jdbcType="VARCHAR"/>
+            <result property="idNum" column="id_num" jdbcType="VARCHAR"/>
+            <result property="userPhone" column="user_phone" jdbcType="VARCHAR"/>
+            <result property="userEmail" column="user_email" jdbcType="VARCHAR"/>
+            <result property="userPwd" column="user_pwd" jdbcType="VARCHAR"/>
+            <result property="userAge" column="user_age" jdbcType="INTEGER"/>
+            <result property="userAddr" column="user_addr" jdbcType="VARCHAR"/>
+            <result property="userSex" column="user_sex" jdbcType="OTHER"/>
+            <result property="userType" column="user_type" jdbcType="OTHER"/>
+            <result property="userState" column="user_state" jdbcType="OTHER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id,user_realName,id_num,
+        user_phone,user_email,user_pwd,
+        user_age,user_addr,user_sex,
+        user_type,user_state,create_time,
+        last_login_time
+    </sql>
+</mapper>

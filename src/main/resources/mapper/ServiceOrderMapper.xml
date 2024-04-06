@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.user.mapper.ServiceOrderMapper">
+
+    <resultMap id="BaseResultMap" type="com.user.pojo.ServiceOrder">
+            <id property="orderId" column="order_id" jdbcType="VARCHAR"/>
+            <result property="elderlyId" column="elderly_id" jdbcType="VARCHAR"/>
+            <result property="elderlyName" column="elderly_name" jdbcType="VARCHAR"/>
+            <result property="guardianId" column="guardian_id" jdbcType="VARCHAR"/>
+            <result property="guardianName" column="guardian_name" jdbcType="VARCHAR"/>
+            <result property="servProvId" column="serv_prov_id" jdbcType="VARCHAR"/>
+            <result property="servProvName" column="serv_prov_name" jdbcType="VARCHAR"/>
+            <result property="servState" column="serv_state" jdbcType="OTHER"/>
+            <result property="orderAmount" column="order_amount" jdbcType="DECIMAL"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+            <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        order_id,elderly_id,elderly_name,
+        guardian_id,guardian_name,serv_prov_id,
+        serv_prov_name,serv_state,order_amount,
+        create_time,start_time,end_time
+    </sql>
+</mapper>
