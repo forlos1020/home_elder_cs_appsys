@@ -3,6 +3,7 @@ package com.user.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.user.pojo.OrderOperation;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
 * @author ASUS

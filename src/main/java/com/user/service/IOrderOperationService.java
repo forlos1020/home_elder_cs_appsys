@@ -10,4 +10,6 @@ import com.user.pojo.OrderOperation;
 */
 public interface IOrderOperationService extends IService<OrderOperation> {
 
+    void createTab();
+
 }

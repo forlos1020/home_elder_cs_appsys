@@ -1,4 +1,4 @@
-package com.user.pojo;
+package com.user.pojo.param;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -21,15 +21,9 @@ public class OrderParam {
 
     public String orderId;
     @NonNull
-    public String elderlyId;
-    @NonNull
-    public String elderlyName;
-    @NonNull
-    public String guardianId;
-    @NonNull
-    public String guardianName;
-    @NonNull
     public BigDecimal orderAmount;
+    @NonNull
+    public String userPhone;
     @NonNull
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

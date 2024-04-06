@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.user.mapper.OrderOperationMapper">
 
-    <resultMap id="BaseResultMap" type="com.user.pojo.OrderOperation">
+    <resultMap id="BaseResultMap" type="com.user.mapper.OrderOperationMapper">
             <result property="orderId" column="order_id" jdbcType="VARCHAR"/>
             <result property="operatorId" column="operator_id" jdbcType="VARCHAR"/>
             <result property="operatorName" column="operator_name" jdbcType="VARCHAR"/>

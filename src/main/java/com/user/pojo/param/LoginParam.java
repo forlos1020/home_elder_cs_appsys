@@ -1,4 +1,4 @@
-package com.user.pojo;
+package com.user.pojo.param;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,10 +12,10 @@ import lombok.NonNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginParam {
+public class  LoginParam {
 
     @NonNull
-    public String username;
+    public String phone;
     @NonNull
     public String password;
     @NonNull

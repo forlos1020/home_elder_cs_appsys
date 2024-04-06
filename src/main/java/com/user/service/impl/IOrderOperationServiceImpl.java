@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.user.pojo.OrderOperation;
 import com.user.service.IOrderOperationService;
 import com.user.mapper.OrderOperationMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,9 +13,13 @@ import org.springframework.stereotype.Service;
 * @createDate 2023-12-07 11:10:42
 */
 @Service
+@AllArgsConstructor
 public class IOrderOperationServiceImpl extends ServiceImpl<OrderOperationMapper, OrderOperation>
     implements IOrderOperationService {
 
+    @Override
+    public void createTab() {
+    }
 }
 
 
