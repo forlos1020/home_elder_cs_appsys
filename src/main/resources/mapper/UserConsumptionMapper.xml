@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.user.mapper.UserConsumptionMapper">
+
+    <resultMap id="BaseResultMap" type="com.user.pojo.UserConsumption">
+            <id property="consumptionId" column="consumption_id" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+            <result property="receiverId" column="receiver_id" jdbcType="VARCHAR"/>
+            <result property="receiverName" column="receiver_name" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="INTEGER"/>
+            <result property="amount" column="amount" jdbcType="INTEGER"/>
+            <result property="time" column="time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        consumption_id,user_id,user_name,
+        receiver_id,receiver_name,type,
+        amount,time
+    </sql>
+</mapper>
