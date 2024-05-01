@@ -1,7 +1,10 @@
 package com.user.service;
 
+import com.user.pojo.Result;
 import com.user.pojo.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.io.IOException;
 
 /**
 * @author ASUS
@@ -10,4 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface UserService extends IService<User> {
 
+
+    Result certification(String realName, String idNumber, String userId) throws IOException;
 }

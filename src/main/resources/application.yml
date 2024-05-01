@@ -5,6 +5,18 @@ server:
     session:
       timeout: PT60M
 spring:
+  mail:
+    protocol: smtp
+    host: smtp.qq.com
+    port: 587
+    username: lu_forloslol@qq.com
+    password: pougfdyddacxgbhd
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   security:
     user:
       name: forlos

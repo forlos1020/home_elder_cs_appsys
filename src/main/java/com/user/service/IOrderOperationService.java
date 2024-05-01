@@ -2,6 +2,7 @@ package com.user.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.user.pojo.OrderOperation;
+import com.user.pojo.Result;
 
 /**
 * @author ASUS
@@ -10,6 +11,6 @@ import com.user.pojo.OrderOperation;
 */
 public interface IOrderOperationService extends IService<OrderOperation> {
 
-    void createTab();
 
+    Result getOrderStatus(String orderId);
 }

@@ -1,4 +1,4 @@
-package com.user.service.service;
+package com.user.service;
 
 import com.user.pojo.CareProviderInfo;
 import com.baomidou.mybatisplus.extension.service.IService;

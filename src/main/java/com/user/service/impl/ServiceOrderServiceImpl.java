@@ -1,27 +1,27 @@
 package com.user.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.user.constance.Operation;
 import com.user.constance.ServiceState;
 import com.user.mapper.ServiceOrderMapper;
-import com.user.pojo.CareProviderInfo;
+import com.user.pojo.*;
 import com.user.pojo.Dto.UserDTO;
-import com.user.pojo.OrderOperation;
 import com.user.pojo.param.EvaluateParams;
+import com.user.pojo.param.OrderListParams;
 import com.user.pojo.param.OrderParam;
-import com.user.pojo.Result;
-import com.user.pojo.ServiceOrder;
-import com.user.service.IOrderOperationService;
-import com.user.service.ServiceOrderService;
-import com.user.service.service.CareProviderInfoService;
-import com.user.utils.ResultUtils;
+import com.user.service.*;
 import com.user.utils.SystemUtils;
+import com.user.utils.UUIDUtils;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,13 +43,14 @@ public class ServiceOrderServiceImpl extends ServiceImpl<ServiceOrderMapper, Ser
     private final IOrderOperationService orderOperationService;
     private final CareProviderInfoService careProviderInfoService;
     private final SystemUtils systemUtils;
-
+    private GuardianInfoService guardianService;
+    private ElderStateService elderService;
     private static final Logger logger = LoggerFactory.getLogger(ServiceOrderService.class);
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Result<?> takeOrder(OrderParam param) {
+    public Result takeOrder(OrderParam param) {
         UserDTO currentUser = null;
         try {
             currentUser = systemUtils.getCurrentUser(param.getUserPhone());
@@ -58,7 +59,7 @@ public class ServiceOrderServiceImpl extends ServiceImpl<ServiceOrderMapper, Ser
             throw new RuntimeException(e);
         }
         if (currentUser.getUserType() != 3) {
-            return ResultUtils.error(500, "用户类型不匹配");
+            return Result.error("用户类型不匹配");
         }
         this.update(new LambdaUpdateWrapper<ServiceOrder>()
                 .eq(ServiceOrder::getOrderId, param.getOrderId())
@@ -68,11 +69,11 @@ public class ServiceOrderServiceImpl extends ServiceImpl<ServiceOrderMapper, Ser
         orderOperationService.save(new OrderOperation(param.getOrderId(), currentUser.getUserId(),
                 currentUser.getUserRealname(), Operation.RECEIVE, LocalDateTime.now()));
 
-        return ResultUtils.success("请求成功");
+        return Result.success("请求成功");
     }
 
     @Override
-    public Result<?> confirmOrder(OrderParam param) {
+    public Result confirmOrder(OrderParam param) {
         UserDTO currentUser = null;
         try {
             currentUser = systemUtils.getCurrentUser(param.getUserPhone());
@@ -84,11 +85,11 @@ public class ServiceOrderServiceImpl extends ServiceImpl<ServiceOrderMapper, Ser
                 .set(ServiceOrder::getServState, ServiceState.CONFIRM).update();
         orderOperationService.save(new OrderOperation(param.getOrderId(), currentUser.getUserId(),
                 currentUser.getUserRealname(), Operation.CONFIRM, LocalDateTime.now()));
-        return ResultUtils.success("请求成功");
+        return Result.success("请求成功");
     }
 
     @Override
-    public Result<?> startOrder(OrderParam param) {
+    public Result startOrder(OrderParam param) {
         UserDTO currentUser = null;
         try {
             currentUser = systemUtils.getCurrentUser(param.getUserPhone());
@@ -100,11 +101,11 @@ public class ServiceOrderServiceImpl extends ServiceImpl<ServiceOrderMapper, Ser
                 .set(ServiceOrder::getServState, ServiceState.NURSING).update();
         orderOperationService.save(new OrderOperation(param.getOrderId(), currentUser.getUserId(),
                 currentUser.getUserRealname(), Operation.START, LocalDateTime.now()));
-        return ResultUtils.success("请求成功");
+        return Result.success("请求成功");
     }
 
     @Override
-    public Result<?> endOrder(OrderParam param) {
+    public Result endOrder(OrderParam param) {
         UserDTO currentUser = null;
         try {
             currentUser = systemUtils.getCurrentUser(param.getUserPhone());
@@ -122,11 +123,11 @@ public class ServiceOrderServiceImpl extends ServiceImpl<ServiceOrderMapper, Ser
         wrapper.eq("user_id", servProvId);
         wrapper.setSql("order_num = order_num + 1");
         careProviderInfoService.update(wrapper);
-        return ResultUtils.success("请求成功");
+        return Result.success("请求成功");
     }
 
     @Override
-    public Result<?> evaluateOrder(EvaluateParams param) {
+    public Result evaluateOrder(EvaluateParams param) {
         UserDTO currentUser = null;
         try {
             currentUser = systemUtils.getCurrentUser(param.getUserPhone());
@@ -155,6 +156,65 @@ public class ServiceOrderServiceImpl extends ServiceImpl<ServiceOrderMapper, Ser
         }
         orderOperationService.save(new OrderOperation(param.getOrderId(), currentUser.getUserId(),
                 currentUser.getUserRealname(), Operation.EVALUATED, LocalDateTime.now()));
-        return ResultUtils.success("请求成功");
+        return Result.success("请求成功");
+    }
+
+    @Override
+    public Result getOrderList(OrderListParams param) {
+        Page<ServiceOrder> page = new Page<>();
+        page.setSize(param.getSize());
+        page.setCurrent(param.getPage());
+        LambdaQueryWrapper<ServiceOrder> queryWrapper = new LambdaQueryWrapper<>();
+        LocalDateTime[] orderTime = param.getOrderTime();
+
+        queryWrapper.eq(StringUtils.isNotEmpty(param.getOrderStatus()), ServiceOrder::getServState, param.getOrderStatus())
+                .ge(orderTime != null, ServiceOrder::getStartTime, orderTime != null ? orderTime[0] : null)
+                .le(orderTime != null, ServiceOrder::getEndTime, orderTime != null ? orderTime[1] : null);
+        // 使用 queryWrapper 直接调用 page 方法
+        page = this.page(page, queryWrapper);
+        return Result.success("请求成功", page);
+
+    }
+
+    @Override
+    public Result createOrder(OrderParam param) throws UnsupportedEncodingException {
+        UserDTO currentUser = systemUtils.getCurrentUser(param.getUserPhone());
+        ServiceOrder serviceOrder = new ServiceOrder();
+        String uuid = UUIDUtils.get24UUID();
+        BeanUtils.copyProperties(param, serviceOrder);
+        serviceOrder.setOrderId(uuid);
+        serviceOrder.setServState(ServiceState.PENDING);
+        serviceOrder.setCreateTime(LocalDateTime.now());
+        if (currentUser.getUserType() == 1) {
+            //老年人用户创建订单
+            serviceOrder.setElderlyId(currentUser.getUserId());
+            serviceOrder.setElderlyName(currentUser.getUserRealname());
+            String associatedGuardiansId = elderService.lambdaQuery().eq(ElderState::getUserId, currentUser.getUserId()).one().getAssociatedGuardiansId();
+            GuardianInfo guardianInfo = guardianService.lambdaQuery().eq(GuardianInfo::getUserId, associatedGuardiansId).one();
+            serviceOrder.setGuardianId(guardianInfo.getUserId());
+            serviceOrder.setGuardianName(guardianInfo.getUserRealname());
+        } else if (currentUser.getUserType() == 2) {
+            //监护人用户创建订单
+            serviceOrder.setGuardianId(currentUser.getUserId());
+            serviceOrder.setGuardianName(currentUser.getUserRealname());
+            GuardianInfo guardianInfo = guardianService.lambdaQuery().eq(GuardianInfo::getUserId, currentUser.getUserId()).one();
+            serviceOrder.setElderlyId(guardianInfo.getWardId());
+            serviceOrder.setElderlyName(guardianInfo.getWardName());
+        }
+        this.save(serviceOrder);
+        OrderOperation orderOperation = new OrderOperation();
+        orderOperation.setOrderId(uuid);
+        orderOperation.setOperatorId(currentUser.getUserId());
+        orderOperation.setOperatorName(currentUser.getUserRealname());
+        orderOperation.setOperationTime(LocalDateTime.now());
+        orderOperation.setOperationState(Operation.CREATE);
+        orderOperationService.save(orderOperation);
+        return Result.success("创建成功");
+    }
+
+    @Override
+    public Result getOrder(String orderId) {
+        ServiceOrder orderInfo = this.lambdaQuery().eq(ServiceOrder::getOrderId, orderId).one();
+        return Result.success("请求成功",orderInfo);
     }
 }

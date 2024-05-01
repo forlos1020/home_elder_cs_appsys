@@ -1,8 +1,8 @@
-package com.user.service.service.impl;
+package com.user.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.user.pojo.GuardianInfo;
-import com.user.service.service.GuardianInfoService;
+import com.user.service.GuardianInfoService;
 import com.user.mapper.GuardianInfoMapper;
 import org.springframework.stereotype.Service;
 

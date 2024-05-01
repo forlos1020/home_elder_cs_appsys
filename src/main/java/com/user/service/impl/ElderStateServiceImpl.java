@@ -1,8 +1,8 @@
-package com.user.service.service.impl;
+package com.user.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.user.pojo.ElderState;
-import com.user.service.service.ElderStateService;
+import com.user.service.ElderStateService;
 import com.user.mapper.ElderStateMapper;
 import org.springframework.stereotype.Service;
 

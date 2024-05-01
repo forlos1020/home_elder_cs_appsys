@@ -14,10 +14,12 @@ import lombok.NonNull;
 @NoArgsConstructor
 public class  LoginParam {
 
-    @NonNull
     public String phone;
-    @NonNull
     public String password;
-    @NonNull
+    public String email;
+    public String emailCode;
+    public Integer loginType;
+    public Integer registerType;
+
     public String code;
 }

@@ -2,6 +2,7 @@ package com.user.mapper;
 
 import com.user.pojo.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.mapstruct.Mapper;
 
 /**
 * @author ASUS
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2024-01-12 15:52:21
 * @Entity com.user.pojo.User
 */
+@Mapper
 public interface UserMapper extends BaseMapper<User> {
 
 }

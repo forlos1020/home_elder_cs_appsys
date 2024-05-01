@@ -2,10 +2,13 @@ package com.user.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.user.pojo.OrderOperation;
+import com.user.pojo.Result;
 import com.user.service.IOrderOperationService;
 import com.user.mapper.OrderOperationMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * @author ASUS
@@ -18,7 +21,10 @@ public class IOrderOperationServiceImpl extends ServiceImpl<OrderOperationMapper
     implements IOrderOperationService {
 
     @Override
-    public void createTab() {
+    public Result getOrderStatus(String orderId) {
+        List<OrderOperation> list = this.lambdaQuery().eq(OrderOperation::getOrderId, orderId)
+                .orderByAsc(OrderOperation::getOperationTime).list();
+        return Result.success("请求成功",list);
     }
 }
 

@@ -1,8 +1,8 @@
-package com.user.service.service.impl;
+package com.user.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.user.pojo.CareProviderInfo;
-import com.user.service.service.CareProviderInfoService;
+import com.user.service.CareProviderInfoService;
 import com.user.mapper.CareProviderInfoMapper;
 import org.springframework.stereotype.Service;
 
